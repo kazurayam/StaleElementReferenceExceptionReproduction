@@ -1,8 +1,8 @@
 # Reproducing Selenium StaleElementReferenceException in Katalon Studio
 
--   @author kazurayam
+- @author kazurayam
 
--   @date Dec 2024
+- @date Dec 2024
 
 This is a small [Katalon Studio](https://katalon.com/katalon-studio) project for demonstration purpose. You can download the zip of this repository from the [Releases](https://github.com/kazurayam/StaleElementReferenceExceptionReproduction/releases) page, download it, unzip it, open it with your local Katalon Studio.
 
@@ -18,15 +18,15 @@ I would use an achronym "SERE" (**S**tale **E**lement **R**eference **E**xceptio
 
 In the [Katalon Community](https://forum.katalon.com/), there are a lot of topics about SERE:
 
--   [Unable to catch StaleElementReferenceException using try/catch mehcanism](https://forum.katalon.com/t/unable-to-catch-staleelementreferenceexception-using-try-catch-mehcanism/100180)
+- [Unable to catch StaleElementReferenceException using try/catch mehcanism](https://forum.katalon.com/t/unable-to-catch-staleelementreferenceexception-using-try-catch-mehcanism/100180)
 
--   [Katalon Studio Fails to Handle StaleElementReferenceException](https://forum.katalon.com/t/katalon-studio-fails-to-handle-staleelementreferenceexception/156753)
+- [Katalon Studio Fails to Handle StaleElementReferenceException](https://forum.katalon.com/t/katalon-studio-fails-to-handle-staleelementreferenceexception/156753)
 
--   [Ways to fix the StaleElementReferenceExcetpion (and similar exception)](https://forum.katalon.com/t/ways-to-fix-the-staleelementreferenceexception-and-similar-exception/112355)
+- [Ways to fix the StaleElementReferenceExcetpion (and similar exception)](https://forum.katalon.com/t/ways-to-fix-the-staleelementreferenceexception-and-similar-exception/112355)
 
--   [How to fix StaleElementReferenceException: stale element reference: element is not attached to the page document](https://forum.katalon.com/t/how-to-fix-staleelementreferenceexception-stale-element-reference-element-is-not-attached-to-the-page-document/63304)
+- [How to fix StaleElementReferenceException: stale element reference: element is not attached to the page document](https://forum.katalon.com/t/how-to-fix-staleelementreferenceexception-stale-element-reference-element-is-not-attached-to-the-page-document/63304)
 
--   [Headless Chrome Browser - getting StaleElementReferenceException for some elements](https://forum.katalon.com/t/headless-chrome-browser-getting-staleelementreferenceexception-for-some-elements/47348)
+- [Headless Chrome Browser - getting StaleElementReferenceException for some elements](https://forum.katalon.com/t/headless-chrome-browser-getting-staleelementreferenceexception-for-some-elements/47348)
 
 Please make a search in the forum to look up more
 
@@ -38,7 +38,7 @@ I found a common shortcoming in these posts about SERE. The original posters ask
 
 In order to understand what Stale Element Reference Exception is, I refered to the article:
 
--   [Baeldung, Selenium StaleElementReferenceException](https://www.baeldung.com/selenium-staleelementreferenceexception).
+- [Baeldung, Selenium StaleElementReferenceException](https://www.baeldung.com/selenium-staleelementreferenceexception).
 
 ## Solution
 
@@ -52,7 +52,7 @@ At first, I created a HTML file as the target of my tests. The file located at `
 
 You can see the HTML in action at:
 
--   <https://kazurayam.github.io/StaleElementReferenceExceptionReproduction/targetPage.html>
+- <https://kazurayam.github.io/StaleElementReferenceExceptionReproduction/targetPage.html>
 
 When the page opens, it will look like this:
 
@@ -71,7 +71,7 @@ The HTML contains the following JavaScript. This changes the DOM dynamically.
         function modifyPage() {
           // remove the <button @id='myButton'>
           document.getElementById('myButton').remove();
-          // recreate the <button @id='byButton'>
+          // recreate the <button @id='myButton'>
           let btn = document.createElement('button');
           btn.id = 'myButton';
           btn.textContent = 'This button once was removed and recreated'
@@ -341,9 +341,9 @@ Any other keywords would behave the same?
 
 In the [Test Cases/TC5](https://github.com/kazurayam/StaleElementReferenceExceptionReproduction/blob/main/Scripts/TC2/Script1733285851173.groovy), I pick up just a few other WebUI keywords and found the following 2 built-in keywords threw SERE.
 
--   WebUI.waitForElementNotHasAttribute
+- WebUI.waitForElementNotHasAttribute
 
--   WebUI.waitForElementNotVisible
+- WebUI.waitForElementNotVisible
 
 There could be more.
 
@@ -353,9 +353,9 @@ It was interesting to find that the `WebUI.waitForElementNotPresent` keyword did
 
 I would like to propose a set of categorical terms:
 
--   **Stateless keyword**, e.g, `WebUI.waitForElementNotPresent`
+- **Stateless keyword**, e.g, `WebUI.waitForElementNotPresent`
 
--   **Stateful keyword**, e.g, `WebUI.waitForElementNotClickable`
+- **Stateful keyword**, e.g, `WebUI.waitForElementNotClickable`
 
 A stateful keyword has a variable of type `org.openqa.selenium.WebElement`, which is once gets initialized with a valid reference to a DOM element
 in the target page, and is kept in memory and is referred to repeatedly for long seconds.
@@ -558,7 +558,7 @@ I made a Test Case:
 
 This script targets the url
 
--   <https://kazurayam.github.io/StaleElementReferenceExceptionReproduction/initiallyDisabledLaterEnabled.html>
+- <https://kazurayam.github.io/StaleElementReferenceExceptionReproduction/initiallyDisabledLaterEnabled.html>
 
 When I ran the TC6, I saw a SERE was thrown:
 
@@ -586,9 +586,9 @@ I presented the reason how a StaleElementReferenceException is raised by Katlaon
 
 Lesson learned:
 
--   when you encountered a SERE, you need to study how your target web page is written. You need to be aware how JavaScript works inside the page.
+- when you encountered a SERE, you need to study how your target web page is written. You need to be aware how JavaScript works inside the page.
 
--   you need to read the source code of WebUI keywords if it threw a SERE.
+- you need to read the source code of WebUI keywords if it threw a SERE.
 
 How can you avoid SERE at all? Well, I don’t know. There is no silver bullet. Please find your way for yourself.
 
